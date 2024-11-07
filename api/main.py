@@ -12,7 +12,7 @@ import os
 app = FastAPI()
 
 # Load TFSMLayer
-tfs = TFSMLayer('../models/1', call_endpoint='serving_default')
+tfs = TFSMLayer('../models/2', call_endpoint='serving_default')
 
 # Define a new model with TFSMLayer as a layer
 input_layer = Input(shape=(256, 256, 3))  # Replace with the shape expected by TFSMLayer
