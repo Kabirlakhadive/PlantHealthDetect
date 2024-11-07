@@ -20,11 +20,7 @@ output_layer = tfs(input_layer)
 
 MODEL = Model(inputs=input_layer, outputs=output_layer)
 
-CLASS_NAMES = ['Pepper__bell___Bacterial_spot',
-               'Pepper__bell___healthy',
-               'Potato___Early_blight',
-               'Potato___Late_blight',
-               'Potato___healthy']
+CLASS_NAMES = ['Pepper__bell___Bacterial_spot','Pepper__bell___healthy','Potato___Early_blight','Potato___Late_blight','Potato___healthy']
 
 
 @app.get("/ping")
@@ -40,12 +36,28 @@ def read_file_as_image(data) -> np.ndarray:
 @app.post("/predict")
 async def predict(
         file: UploadFile = File(...),
-
 ):
     image = read_file_as_image(await file.read())
-    img_batch = np.expand_dims(image, axis=0)
+    img_batch = np.expand_dims(image,0)
     predictions = MODEL.predict(img_batch)
-    pass
+
+    # Access the nested dictionary key to get the actual prediction values
+    if isinstance(predictions, dict):
+        prediction = predictions.get("output_0", [])[0]
+    else:
+        prediction = predictions[0]  # Fallback in case it’s not a dictionary
+
+    # Get the index of the highest probability class
+    predicted_class_index = np.argmax(prediction)
+
+    # Get the class name and confidence
+    predicted_class = CLASS_NAMES[predicted_class_index]
+    confidence = prediction[predicted_class_index]
+
+    return {
+        'class': predicted_class,
+        'confidence': float(confidence)
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host='localhost', port=8000)
