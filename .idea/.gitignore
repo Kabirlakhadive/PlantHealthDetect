@@ -13,5 +13,5 @@ CompleteDatabase/
 *.jgp
 *.JPG
 *.JPEG
-
+CompleteDatabase/*/*.JPG
 
