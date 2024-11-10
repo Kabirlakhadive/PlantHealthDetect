@@ -1,0 +1,6 @@
+CompleteDatabase/Peach___Bacterial_spot/image (5).JPG
+# Ignore all JPG and JPEG files in CompleteDatabase and subdirectories
+CompleteDatabase/**/*.jpg
+CompleteDatabase/**/*.jpeg
+CompleteDatabase/**/*.JPG
+CompleteDatabase/**/*.JPEG

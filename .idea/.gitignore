@@ -13,3 +13,8 @@ CompleteDatabase/
 *.JPG
 *.JPEG
 CompleteDatabase/*/*.JPG
+# Ignore all JPG and JPEG files in CompleteDatabase and subdirectories
+CompleteDatabase/**/*.jpg
+CompleteDatabase/**/*.jpeg
+CompleteDatabase/**/*.JPG
+CompleteDatabase/**/*.JPEG
