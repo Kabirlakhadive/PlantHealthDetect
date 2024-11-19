@@ -29,7 +29,7 @@ output_layer = tfs(input_layer)
 
 MODEL = Model(inputs=input_layer, outputs=output_layer)
 
-CLASS_NAMES = ['Pepper bell Bacterial spot','Pepper bell healthy','Potato Early blight','Potato Late_blight','Potato healthy']
+CLASS_NAMES = ['Pepper Bell Bacterial Spot','Pepper Bell Healthy','Potato Early Blight','Potato Late Blight','Potato Healthy']
 
 
 @app.get("/ping")
