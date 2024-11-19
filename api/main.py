@@ -5,11 +5,20 @@ from fastapi import FastAPI, UploadFile, File
 import uvicorn
 import tensorflow as tf
 import tensorflow.keras as keras
+from starlette.middleware.cors import CORSMiddleware
 from tensorflow.keras.layers import TFSMLayer, Input
 from tensorflow.keras.models import Model
 import os
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins (or specify ["http://localhost:3000"] to restrict)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Load TFSMLayer
 tfs = TFSMLayer('../models/2', call_endpoint='serving_default')
@@ -55,8 +64,7 @@ async def predict(
     confidence = prediction[predicted_class_index]
 
     return {
-        'class': predicted_class,
-        'confidence': float(confidence)
+        "class": predicted_class, "confidence": float(confidence)
     }
 
 if __name__ == "__main__":
