@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 # Load TFSMLayer
-tfs = TFSMLayer('../models/2', call_endpoint='serving_default')
+tfs = TFSMLayer('../models/5', call_endpoint='serving_default')
 
 # Define a new model with TFSMLayer as a layer
 input_layer = Input(shape=(256, 256, 3))  # Replace with the shape expected by TFSMLayer
@@ -29,7 +29,19 @@ output_layer = tfs(input_layer)
 
 MODEL = Model(inputs=input_layer, outputs=output_layer)
 
-CLASS_NAMES = ['Pepper Bell Bacterial Spot','Pepper Bell Healthy','Potato Early Blight','Potato Late Blight','Potato Healthy']
+# Define the directory containing class folders
+CLASS_FOLDER_DIRECTORY = "../CompleteDatabase"
+
+# update CLASS_NAMES based on folder names in the directory
+def get_class_names(directory):
+    """Fetch class names dynamically based on folder names in a directory."""
+    try:
+        return sorted([folder for folder in os.listdir(directory) if os.path.isdir(os.path.join(directory, folder))])
+    except FileNotFoundError:
+        print(f"Directory not found: {directory}")
+        return []
+
+CLASS_NAMES = get_class_names(CLASS_FOLDER_DIRECTORY)
 
 
 @app.get("/ping")
@@ -47,7 +59,7 @@ async def predict(
         file: UploadFile = File(...),
 ):
     image = read_file_as_image(await file.read())
-    img_batch = np.expand_dims(image,0)
+    img_batch = np.expand_dims(image, 0)
     predictions = MODEL.predict(img_batch)
 
     # Access the nested dictionary key to get the actual prediction values
@@ -64,8 +76,12 @@ async def predict(
     confidence = prediction[predicted_class_index]
 
     return {
-        "class": predicted_class, "confidence": float(confidence)
+        "class": predicted_class,
+        "confidence": float(confidence)
     }
 
+
 if __name__ == "__main__":
+    # Reload the CLASS_NAMES dynamically whenever the app starts
+    CLASS_NAMES = get_class_names(CLASS_FOLDER_DIRECTORY)
     uvicorn.run(app, host='localhost', port=8000)
