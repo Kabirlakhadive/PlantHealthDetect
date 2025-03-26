@@ -58,7 +58,6 @@ function App() {
     }
   };
 
-  // Check if the class contains 'healthy' for styling purposes
   const getClassBackgroundColor = (className) => {
     return className.toLowerCase().includes("healthy")
       ? "background-green"
